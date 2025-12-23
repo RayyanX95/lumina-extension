@@ -1,5 +1,4 @@
 import type { Draft, UserPersona } from "../types";
-import { PROMPT } from "../assets/constants";
 
 interface GenerateDraftsParams {
   text: string;
@@ -24,37 +23,49 @@ interface OpenAIResponse {
 
 const generateId = () => Math.random().toString(36).substring(2, 15);
 
-const buildSystemPrompt = (persona: UserPersona): string => {
-  return PROMPT.replace(
-    "[User Persona]",
-    `${persona.role} in the ${persona.industry} industry with a ${persona.tone} tone`
-  );
-};
-
 const buildUserPrompt = (
   text: string,
   pageTitle: string,
-  url: string
+  url: string,
+  userPersona: string
 ): string => {
   return `
-Based on the following content I found interesting, generate THREE different LinkedIn post drafts:
+Role: You are a Senior ${userPersona}. You are writing a LinkedIn post for your peers.
+Context: You just found this: "${pageTitle}" (${url}).
+Input Text: "${text}"
 
-**Source:** ${pageTitle}
-**URL:** ${url}
+STRICT QUALITY RULES:
+1. NO INTROS: Do not start with "I'm excited," "Check out," or "Next.js 16 is here." 
+2. NO CORPORATE SLOP: Banned words: leverage, streamline, robust, empower, efficiency, enhance, game-changer, unlock, comprehensive.
+3. FORMATTING: No em-dashes (—). No sparkles (✨). Use simple periods.
+4. TONE: Use "I" and "me." Use contractions (don't, it's). Write like a Slack message to a friend.
 
-**Content:**
-"${text}"
+---
+STYLE REFERENCE (Follow this "Lumina" style):
+❌ WRONG (AI-speak): "Mastering Chrome DevTools can significantly improve your debugging efficiency and save you time."
+✅ RIGHT (Lumina-speak): "I used to waste 20 minutes a day hunting for 'ghost CSS.' Then I found the Coverage tab. It’s a total sanity saver."
+---
 
-Generate exactly 3 posts in JSON format:
-1. "tldr" - A concise, value-driven summary (2-3 sentences max)
-2. "perspective" - A "Why this matters" take with your unique point of view (3-4 sentences)
-3. "question" - A thought-provoking question to drive engagement (2-3 sentences ending with a question)
+Generate 3 versions in JSON:
 
-Respond ONLY with valid JSON in this exact format:
+1. "tldr": (The Practical Win)
+   - Start with a specific result.
+   - Example: "The Coverage tab in DevTools just pruned 40% of my unused CSS. My bundle size thanks me."
+
+2. "perspective": (The Hot Take)
+   - Start with an opinion or a frustration.
+   - Focus on the *human feeling* (relief, annoyance, or "aha!" moment).
+   - Max 3 lines.
+
+3. "question": (The Debate)
+   - Present a "This vs. That" or a "Hidden Gem" scenario.
+   - Example: "Computed Tab vs. Styles Tab: Which one do you actually trust for debugging layout shifts?"
+
+JSON OUTPUT:
 {
-  "tldr": "Your TL;DR post here...",
-  "perspective": "Your perspective post here...",
-  "question": "Your question-based post here..."
+  "tldr": "",
+  "perspective": "",
+  "question": ""
 }
 `;
 };
@@ -71,8 +82,10 @@ export async function generateDrafts(
   }
 
   const messages: OpenAIMessage[] = [
-    { role: "system", content: buildSystemPrompt(persona) },
-    { role: "user", content: buildUserPrompt(text, pageTitle, url) },
+    {
+      role: "user",
+      content: buildUserPrompt(text, pageTitle, url, persona.role),
+    },
   ];
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -101,8 +114,16 @@ export async function generateDrafts(
     throw new Error("No content received from AI");
   }
 
-  // Parse the JSON response
-  const parsed = JSON.parse(content);
+  // Clean and Parse the JSON response
+  let parsed: { tldr: string; perspective: string; question: string };
+  try {
+    // Remove markdown code blocks if present
+    const cleanContent = content.replace(/```json\n?|\n?```/g, "").trim();
+    parsed = JSON.parse(cleanContent);
+  } catch (e) {
+    console.error("Failed to parse AI response:", e);
+    throw new Error("Failed to parse AI response. Please try again.");
+  }
   const now = Date.now();
 
   const drafts: Draft[] = [
