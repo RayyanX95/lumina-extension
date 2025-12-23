@@ -12,7 +12,7 @@ export interface Spark {
 
 export interface Draft {
   id: string;
-  type: "tldr" | "perspective" | "question";
+  type: "tldr" | "perspective" | "question" | "story";
   content: string;
   createdAt: number;
   isEdited: boolean;

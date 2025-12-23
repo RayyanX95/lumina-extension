@@ -45,7 +45,7 @@ STYLE REFERENCE (Follow this "Lumina" style):
 ✅ RIGHT (Lumina-speak): "I used to waste 20 minutes a day hunting for 'ghost CSS.' Then I found the Coverage tab. It’s a total sanity saver."
 ---
 
-Generate 3 versions in JSON:
+Generate 4 versions in JSON:
 
 1. "tldr": (The Practical Win)
    - Start with a specific result.
@@ -60,11 +60,18 @@ Generate 3 versions in JSON:
    - Present a "This vs. That" or a "Hidden Gem" scenario.
    - Example: "Computed Tab vs. Styles Tab: Which one do you actually trust for debugging layout shifts?"
 
+4. "story": (The Narrative Arc) 
+   - Structure: Start with a specific moment of failure or frustration. 
+   - Body: Describe the "aha!" moment found in the content.
+   - Conclusion: How life/work is different now. 
+   - Length: 3-5 short, punchy paragraphs. Use white space between lines.
+
 JSON OUTPUT:
 {
   "tldr": "",
   "perspective": "",
-  "question": ""
+  "question": "",
+  "story": ""
 }
 `;
 };
@@ -108,7 +115,13 @@ export async function generateDrafts(
   }
 
   // Clean and Parse the JSON response
-  let parsed: { tldr: string; perspective: string; question: string };
+  // Clean and Parse the JSON response
+  let parsed: {
+    tldr: string;
+    perspective: string;
+    question: string;
+    story: string;
+  };
   try {
     // Remove markdown code blocks if present
     const cleanContent = content.replace(/```json\n?|\n?```/g, "").trim();
@@ -138,6 +151,13 @@ export async function generateDrafts(
       id: generateId(),
       type: "question",
       content: parsed.question,
+      createdAt: now,
+      isEdited: false,
+    },
+    {
+      id: generateId(),
+      type: "story",
+      content: parsed.story,
       createdAt: now,
       isEdited: false,
     },
