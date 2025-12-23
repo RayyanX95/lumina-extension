@@ -93,3 +93,37 @@ Lumina is a context-aware browser extension that captures real-world professiona
 ### **Next Step for You:**
 
 Would you like me to provide the **System Prompt** for the AI to ensure the drafts are high-quality and "anti-cringe"?
+
+## 8. Project Structure
+
+```bash
+lumina-extension/
+├── public/                  # Static assets & extension scripts
+│   ├── icons/               # App icons
+│   ├── background.js        # Background service worker (Context Menu)
+│   ├── content.js           # Content script (LinkedIn Integration)
+│   └── manifest.json        # Extension manifest (MV3)
+├── src/
+│   ├── assets/              # Static resources & constants
+│   ├── components/          # React components
+│   │   ├── icons/           # SVG Icons
+│   │   ├── views/           # Main application views
+│   │   │   ├── DraftsView.tsx
+│   │   │   ├── HistoryView.tsx
+│   │   │   ├── HomeView.tsx
+│   │   │   └── SettingsView.tsx
+│   │   ├── DraftCard.tsx
+│   │   ├── EmptyState.tsx
+│   │   ├── Header.tsx
+│   │   └── SparkCard.tsx
+│   ├── types/               # TypeScript definitions
+│   ├── utils/               # Utility functions
+│   │   ├── ai.ts            # OpenAI integration
+│   │   └── storage.ts       # Chrome storage wrapper
+│   ├── App.tsx              # Main application entry
+│   ├── index.css            # Global styles
+│   └── main.tsx             # React DOM root
+├── .env                     # Environment variables (API Key)
+├── package.json
+└── vite.config.ts           # Build configuration
+```
