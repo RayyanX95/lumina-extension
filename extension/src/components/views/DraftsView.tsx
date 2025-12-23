@@ -36,6 +36,7 @@ export function DraftsView({
         pageTitle: spark.pageTitle,
         url: spark.url,
         persona: settings.persona,
+        language: settings.language,
       });
 
       onUpdateSpark(spark.id, { drafts });

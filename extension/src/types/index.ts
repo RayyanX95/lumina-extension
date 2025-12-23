@@ -26,6 +26,7 @@ export interface UserPersona {
 
 export interface Settings {
   persona: UserPersona;
+  language: "en" | "ar";
   enableSparkIcon: boolean;
   blacklistedDomains: string[];
 }

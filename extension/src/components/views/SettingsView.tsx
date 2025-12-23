@@ -1,6 +1,11 @@
 import { useState } from "react";
 import type { Settings } from "../../types";
-import { ArrowLeftIcon, UserIcon, CheckIcon } from "../icons/Icons";
+import {
+  ArrowLeftIcon,
+  UserIcon,
+  CheckIcon,
+  LightbulbIcon,
+} from "../icons/Icons";
 
 interface SettingsViewProps {
   settings: Settings;
@@ -82,6 +87,31 @@ export function SettingsView({ settings, onSave, onBack }: SettingsViewProps) {
             }
             placeholder="e.g., Professional yet conversational"
           />
+        </div>
+      </div>
+
+      {/* Language Section */}
+      <div className="settings-section">
+        <h3 className="settings-section__title">
+          <LightbulbIcon />
+          Language
+        </h3>
+
+        <div className="form-group">
+          <label className="form-label">Output Language</label>
+          <select
+            className="form-input"
+            value={formData.language || "en"}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                language: e.target.value as "en" | "ar",
+              })
+            }
+          >
+            <option value="en">English (Default)</option>
+            <option value="ar">Egyptian Arabic (Slang)</option>
+          </select>
         </div>
       </div>
 
