@@ -5,7 +5,6 @@ interface GenerateDraftsParams {
   pageTitle: string;
   url: string;
   persona: UserPersona;
-  apiKey: string;
 }
 
 interface OpenAIMessage {
@@ -73,32 +72,26 @@ JSON OUTPUT:
 export async function generateDrafts(
   params: GenerateDraftsParams
 ): Promise<Draft[]> {
-  const { text, pageTitle, url, persona, apiKey } = params;
+  const { text, pageTitle, url, persona } = params;
 
-  if (!apiKey) {
-    throw new Error(
-      "API key is required. Please add your OpenAI API key in Settings."
-    );
-  }
+  // No apiKey needed on client side anymore!
 
   const messages: OpenAIMessage[] = [
+    // { role: "system", content: buildSystemPrompt(persona) },
     {
       role: "user",
       content: buildUserPrompt(text, pageTitle, url, persona.role),
     },
   ];
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  // Call our local proxy server
+  const response = await fetch("http://localhost:3000/api/generate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "gpt-4o-mini",
       messages,
-      temperature: 0.8,
-      max_tokens: 1000,
     }),
   });
 

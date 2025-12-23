@@ -27,11 +27,6 @@ export function DraftsView({
   const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
-    if (!settings.apiKey) {
-      setError("Please add your OpenAI API key in Settings first.");
-      return;
-    }
-
     setIsGenerating(true);
     setError(null);
 
@@ -41,7 +36,6 @@ export function DraftsView({
         pageTitle: spark.pageTitle,
         url: spark.url,
         persona: settings.persona,
-        apiKey: settings.apiKey,
       });
 
       onUpdateSpark(spark.id, { drafts });

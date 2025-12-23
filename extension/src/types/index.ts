@@ -26,7 +26,6 @@ export interface UserPersona {
 
 export interface Settings {
   persona: UserPersona;
-  apiKey: string;
   enableSparkIcon: boolean;
   blacklistedDomains: string[];
 }

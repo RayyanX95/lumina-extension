@@ -14,7 +14,6 @@ const defaultSettings: Settings = {
     tone: "Professional yet conversational",
     industry: "Technology",
   },
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY || "",
   enableSparkIcon: true,
   blacklistedDomains: [],
 };
@@ -47,12 +46,8 @@ function App() {
         storage.getSettings(),
       ]);
       setSparks(loadedSparks);
-      // Prefer env API key if available, otherwise use stored settings
-      const envApiKey = import.meta.env.VITE_OPENAI_API_KEY;
-      setSettings({
-        ...loadedSettings,
-        apiKey: envApiKey || loadedSettings.apiKey || "",
-      });
+      // Use stored settings
+      setSettings(loadedSettings);
     };
     loadData();
 

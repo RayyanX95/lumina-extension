@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Settings } from "../../types";
-import { ArrowLeftIcon, UserIcon, KeyIcon, CheckIcon } from "../icons/Icons";
+import { ArrowLeftIcon, UserIcon, CheckIcon } from "../icons/Icons";
 
 interface SettingsViewProps {
   settings: Settings;
@@ -85,35 +85,7 @@ export function SettingsView({ settings, onSave, onBack }: SettingsViewProps) {
         </div>
       </div>
 
-      {/* API Key Section */}
-      <div className="settings-section">
-        <h3 className="settings-section__title">
-          <KeyIcon />
-          API Configuration
-        </h3>
-
-        <div className="form-group">
-          <label className="form-label">OpenAI API Key</label>
-          <input
-            type="password"
-            className="form-input"
-            value={formData.apiKey}
-            onChange={(e) =>
-              setFormData({ ...formData, apiKey: e.target.value })
-            }
-            placeholder="sk-..."
-          />
-          <p
-            style={{
-              fontSize: "11px",
-              color: "var(--text-tertiary)",
-              marginTop: "8px",
-            }}
-          >
-            Your API key is stored locally and never sent to our servers.
-          </p>
-        </div>
-      </div>
+      {/* API Key removed - handled by proxy server */}
 
       <button className="btn btn--primary btn--full" onClick={handleSave}>
         {saved ? (

@@ -11,7 +11,6 @@ const defaultSettings: Settings = {
     tone: "Professional yet conversational",
     industry: "Technology",
   },
-  apiKey: "",
   enableSparkIcon: true,
   blacklistedDomains: [],
 };
