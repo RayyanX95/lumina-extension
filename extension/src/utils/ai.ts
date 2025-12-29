@@ -33,82 +33,63 @@ const buildUserPrompt = (
   const languageInstructions =
     language === "ar"
       ? `
-CRITICAL LANGUAGE RULE: OUTPUT IN EGYPTIAN ARABIC SLANG (AMMIYA).
-- Do NOT use Modern Standard Arabic (Fusha).
-- Tone: Like a Senior Engineer explaining a concept to a junior friend at a coffee shop.
-- Avoid dramatic storytelling (e.g., "I was crying", "The world changed"). Keep it grounded.
-- Use Egyptian idioms/words naturally (e.g., "يا جماعة", "اللي حصل", "شغل عالي", "الموضوع ده").
-- Keep technical terms in English (e.g., "Refactoring", "Bug", "API") but sentence structure in Egyptian Arabic.
+CRITICAL LANGUAGE RULE: OUTPUT IN 100% EGYPTIAN AMMIYA.
+- NO Modern Standard Arabic (Fusha). NO "هذه", "قام بـ", "تلك".
+- DO NOT translate technical terms. Keep them in English (e.g., "PRs", "Pull Requests", "Code Review", "Bottleneck", "YAML").
+- Use: "الأدوات دي", "اللي بيحصل", "بجد", "عشان".
 `
       : "";
 
   return `
-Role: You are a Senior ${userPersona}. You are sharing a technical insight on LinkedIn.
-Context: You just read: "${pageTitle}" (${url}).
+Role: You are a Senior ${userPersona}. 
+Context: You are commenting on a technical topic: "${pageTitle}" (${url}).
 Input Text: "${text}"
 
 ${languageInstructions}
 
 STRICT QUALITY RULES:
-1. NO INTROS: Do not start with "I'm excited" or generic hooks.
-2. NO DATA DRAMA: Do not say "My life changed forever." Say "This saved me 2 hours."
-3. FORMATTING: No em-dashes (—). No sparkles (✨). Use simple periods.
-4. TONE: ${
+1. NO STORYTELLING: Do not write a "Once upon a time" story. Do not say "One day I found...".
+2. TONE: Direct, professional, and peer-to-peer. Like a Slack message or a coffee-shop chat.
+3. NO FAKE DRAMA: Do not invent personal events. Use technical frustrations only (e.g., "ضيعت يومي كله") as a way to describe a common work problem.
+4. LANGUAGE: ${
     language === "ar"
-      ? "Friendly, direct Egyptian Ammiya. Explaining, not storytelling."
-      : "Conversational, direct, credible. Like a Slack message to a peer."
+      ? "Egyptian Ammiya. Keep technical English terms as they are."
+      : "Conversational English."
   }
 
 ---
-STYLE REFERENCE (Follow this "Lumina" style):
-${
-  language === "ar"
-    ? '✅ RIGHT: "لما الـ App يبدأ يتقل مع كتر الـ rendering، المشكلة غالبًا بتكون في structure الكود نفسه. الحل مش دايماً React.memo، ساعات كتير بيكون في الـ state placement."'
-    : '❌ WRONG (AI-speak): "Mastering Chrome DevTools can significantly improve your debugging efficiency and save you time."'
-}
-✅ RIGHT (Lumina-speak): "We often blame the network for slow loads, but usually, it is just unoptimized assets crushing the main thread."
----
-
 Generate 4 versions in JSON:
 
 1. "tldr": (The Practical Win)
-   - Start with a specific result.
-   - Example: "The Coverage tab in DevTools just pruned 40% of my unused CSS. My bundle size thanks me."
+   - One sentence. A direct result or a punchy takeaway.
 
 2. "perspective": (The Insight)
-   - Explain the "Why" behind the tech.
-   - Connect it to a real engineering principle (e.g., DX, Performance, Maintenance).
-   - Max 3 lines.
+   - 2-3 lines max. Explain the "Why" (e.g., DX, Team Velocity).
 
 3. "question": (The Discussion)
-   - Ask a technical question based on a specific trade-off.
-   - Example: "Computed Tab vs. Styles Tab: Which one do you actually trust for debugging layout shifts?"
+   - A technical trade-off question to engage other seniors.
 
-4. "story": (The Mentorship Scenario) 
-   - GOAL: Explain a concept by describing a common situation/pattern.
-   - DO NOT write a personal diary entry ("I was working on a project...").
-   - DO NOT use past tense narrative ("I decided to...").
-   - STRUCTURE:
-     1. The Situation: "When you have [Problem]..." or "We often face [Issue]..."
-     2. The Explanation: "The real bottleneck is usually..."
-     3. The Fix: "That is where [Concept] comes in. It helps by..."
-   - TONE: Educational, conversational, "Senior explaining to Junior".
-   - Length: 3-5 short, punchy paragraphs. Use white space between lines.
+4. "scenario": (The Problem/Solution Deep Dive) 
+   - DO NOT tell a fairy tale. Describe a complex technical situation.
+   - Breakdown:
+     1. The Mess: Start with a common frustration (e.g., "أصعب حاجة لما التيم يغرق في...")
+     2. The "Why": Explain the root cause or the technical bottleneck.
+     3. The Practical Fix: Describe the "Aha!" moment and the direct result.
+   - LENGTH: Make it 6-8 short, punchy paragraphs. 
+   - ARABIC TONE: Use "كان هيجيلي جلطة" or "ضيعت يومي كله" only to show technical frustration.
+   - Formatting: Use double newlines (\\n\\n) for readability.
 
 5. "tags": (Hashtags)
-   - Generate 3-5 relevant, high-traffic hashtags based on the topic.
-   - Format: "#Tag1 #Tag2 #Tag3" (space separated string).
+   - 3-5 high-traffic hashtags (e.g., #NextJS #Engineering).
 
-JSON OUTPUT:
+JSON OUTPUT ONLY (Escape newlines with \\n):
 {
   "tldr": "",
   "perspective": "",
   "question": "",
-  "story": "",
+  "scenario": "",
   "tags": ""
 }
-
-IMPORTANT: Ensure all newlines inside string values are escaped (use \\n). Valid JSON only.
 `;
 };
 
@@ -155,7 +136,7 @@ export async function generateDrafts(
     tldr: string;
     perspective: string;
     question: string;
-    story: string;
+    scenario: string;
     tags: string;
   };
   try {
@@ -174,7 +155,7 @@ export async function generateDrafts(
     // real newlines inside the JSON string value for formatting.
     // We want to keep newlines that are already escaped (\\n) alone.
     // But honestly, it's safer to just rely on regex if formatting is bad.
-    // A better approach for "story" which is multiline: use a standard replacement.
+    // A better approach for "scenario" which is multiline: use a standard replacement.
 
     // Attempt to parse. if it fails due to Bad Control Character, we might try to fix it.
     // But let's rely on prompt instructions first.
@@ -220,8 +201,8 @@ export async function generateDrafts(
     },
     {
       id: generateId(),
-      type: "story",
-      content: formatWithTags(parsed.story),
+      type: "scenario",
+      content: formatWithTags(parsed.scenario),
       createdAt: now,
       isEdited: false,
     },

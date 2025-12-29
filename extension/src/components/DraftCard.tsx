@@ -23,7 +23,7 @@ const draftTypeLabels: Record<
   tldr: { label: "TL;DR", icon: <ZapIcon /> },
   perspective: { label: "Perspective", icon: <EyeIcon /> },
   question: { label: "Question", icon: <MessageIcon /> },
-  story: { label: "The Story", icon: <FeatherIcon /> },
+  scenario: { label: "Scenario", icon: <FeatherIcon /> },
 };
 
 export function DraftCard({ draft, onCopy, onSendToLinkedIn }: DraftCardProps) {
