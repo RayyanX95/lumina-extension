@@ -36,11 +36,26 @@ app.post("/api/generate", async (req, res) => {
       return res.status(400).json({ error: "Messages are required" });
     }
 
+    // Use gpt-4.1 where judgment matters.
+    // Use gpt-4o-mini where structure matters.
+
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: messages,
-      temperature: 0.8,
-      max_tokens: 1000,
+      model: "gpt-4.1",
+      messages: [
+        {
+          role: "system",
+          content: `
+You are reacting as a senior engineer.
+Avoid summarizing the input.
+Each paragraph must introduce a NEW technical angle.
+Do not invent teams or personal stories.
+Use frustration phrases at most once, only if relevant.
+      `,
+        },
+        ...messages,
+      ],
+      temperature: 0.35,
+      max_tokens: 600,
     });
 
     res.json(completion);

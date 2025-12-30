@@ -34,53 +34,95 @@ const buildUserPrompt = (
     language === "ar"
       ? `
 CRITICAL LANGUAGE RULE: OUTPUT IN 100% EGYPTIAN AMMIYA.
-- NO Modern Standard Arabic (Fusha). NO "هذه", "قام بـ", "تلك".
-- DO NOT translate technical terms. Keep them in English (e.g., "PRs", "Pull Requests", "Code Review", "Bottleneck", "YAML").
-- Use: "الأدوات دي", "اللي بيحصل", "بجد", "عشان".
+- NO Modern Standard Arabic (Fusha). NO "هذه", "قام بـ", "تلك", "يعتبر".
+- Write like a real engineer talking, NOT a presenter.
+- DO NOT translate technical terms. Keep them in English (e.g., "PRs", "Code Review", "Bottleneck", "YAML").
+- Use spoken connectors: "عشان", "اللي", "بصراحة", "بجد", "فا".
+- Sentences can be slightly imperfect. This is NOT an article.
+- PRESERVE any frustration, reflection, or casual tone from the input.
+- DO NOT invent emotions or exaggerate if they are not present.
 `
-      : "";
+      : `
+CRITICAL LANGUAGE RULE:
+- Conversational English only.
+- NOT motivational. NOT inspirational. NOT polished.
+- Short, imperfect sentences are OK.
+- Write like a senior engineer typing a post, not publishing content.
+`;
 
   return `
-Role: You are a Senior ${userPersona}. 
-Context: You are commenting on a technical topic: "${pageTitle}" (${url}).
-Input Text: "${text}"
+Role: You are a Senior ${userPersona}.
+
+Context:
+You just read this page and you’re sharing a technical reflection on LinkedIn:
+"${pageTitle}" (${url})
+
+Input Text:
+"${text}"
 
 ${languageInstructions}
 
-STRICT QUALITY RULES:
-1. NO STORYTELLING: Do not write a "Once upon a time" story. Do not say "One day I found...".
-2. TONE: Direct, professional, and peer-to-peer. Like a Slack message or a coffee-shop chat.
-3. NO FAKE DRAMA: Do not invent personal events. Use technical frustrations only (e.g., "ضيعت يومي كله") as a way to describe a common work problem.
-4. LANGUAGE: ${
-    language === "ar"
-      ? "Egyptian Ammiya. Keep technical English terms as they are."
-      : "Conversational English."
-  }
+ABSOLUTE RULES (BREAKING ANY = INVALID OUTPUT):
+1. NO FICTION:
+   - Do NOT invent personal stories, teams, clients, timelines, or outcomes.
+   - If something isn’t in the input, don’t add it.
 
+2. NO LINKEDIN GURU TONE:
+   - No “Here’s why this matters”
+   - No “In today’s fast-paced world”
+   - No “The key takeaway is”
+   - No motivational or coaching language
+
+3. POST, NOT ARTICLE:
+   - This must feel like a LinkedIn post written in one sitting.
+   - Slight roughness is GOOD.
+
+4. STORYTELLING:
+   - If the input contains storytelling or reflection, preserve it.
+   - If it doesn’t, do NOT add fake narrative.
+
+5. AUDIENCE:
+   - Write peer-to-peer.
+   - Assume readers are senior engineers.
+   - No explaining basics.
+
+IMPERFECTION RULE:
+- Do NOT make the post feel complete or conclusive.
+- Slightly abrupt or open-ended endings are preferred.
+- One uneven or opinionated sentence is REQUIRED.
 ---
+
 Generate 4 versions in JSON:
 
-1. "tldr": (The Practical Win)
-   - One sentence. A direct result or a punchy takeaway.
+1. "tldr" (The Practical Win)
+   - One short sentence.
+   - Direct, concrete takeaway.
+   - No fluff.
 
-2. "perspective": (The Insight)
-   - 2-3 lines max. Explain the "Why" (e.g., DX, Team Velocity).
+2. "perspective" (The Insight)
+   - 2–3 short lines.
+   - Focus on *why this matters technically* (DX, velocity, trade-offs).
+   - No advice tone.
 
-3. "question": (The Discussion)
-   - A technical trade-off question to engage other seniors.
+3. "question" (The Discussion)
+   - One real technical trade-off question.
+   - Something seniors would actually argue about.
 
-4. "scenario": (The Problem/Solution Deep Dive) 
-   - DO NOT tell a fairy tale. Describe a complex technical situation.
-   - Breakdown:
-     1. The Mess: Start with a common frustration (e.g., "أصعب حاجة لما التيم يغرق في...")
-     2. The "Why": Explain the root cause or the technical bottleneck.
-     3. The Practical Fix: Describe the "Aha!" moment and the direct result.
-   - LENGTH: Make it 6-8 short, punchy paragraphs. 
-   - ARABIC TONE: Use "كان هيجيلي جلطة" or "ضيعت يومي كله" only to show technical frustration.
-   - Formatting: Use double newlines (\\n\\n) for readability.
+4. "scenario" (Problem → Cause → Fix)
+   - Use ONLY what exists in the input.
+   - NO fictional examples.
+   - Preserve original frustration or reflection if present.
+   - Structure:
+     1. The Mess – real pain mentioned in the text
+     2. The Why – actual technical reason
+     3. The Fix – what changed or worked
+   - 6–8 short paragraphs.
+   - Double newlines between paragraphs.
+   - No dramatic language unless present in input.
 
-5. "tags": (Hashtags)
-   - 3-5 high-traffic hashtags (e.g., #NextJS #Engineering).
+5. "tags"
+   - 3–5 realistic, high-signal hashtags.
+   - No marketing tags.
 
 JSON OUTPUT ONLY (Escape newlines with \\n):
 {
