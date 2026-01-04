@@ -5,7 +5,7 @@ const { OpenAI } = require("openai");
 const rateLimit = require("express-rate-limit");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -65,6 +65,10 @@ Use frustration phrases at most once, only if relevant.
       error: error.message || "An error occurred during generation",
     });
   }
+});
+
+app.get("/", (req, res) => {
+  res.send("Lumina API is running");
 });
 
 app.listen(port, () => {
