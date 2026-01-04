@@ -8,6 +8,7 @@ import {
   LinkedInIcon,
   CheckIcon,
   FeatherIcon,
+  RefreshIcon,
 } from "./icons/Icons";
 
 interface DraftCardProps {
@@ -24,6 +25,7 @@ const draftTypeLabels: Record<
   perspective: { label: "Perspective", icon: <EyeIcon /> },
   question: { label: "Question", icon: <MessageIcon /> },
   scenario: { label: "Scenario", icon: <FeatherIcon /> },
+  rewrite: { label: "Human Rewrite", icon: <RefreshIcon /> },
 };
 
 export function DraftCard({ draft, onCopy, onSendToLinkedIn }: DraftCardProps) {

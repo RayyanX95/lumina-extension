@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Spark, Settings, Draft } from "../../types";
+import type { Spark, Settings, Draft, GenerationMode } from "../../types";
 import { DraftCard } from "../DraftCard";
 import { ArrowLeftIcon, RefreshIcon, TrashIcon } from "../icons/Icons";
 import { generateDrafts } from "../../utils/ai";
@@ -25,8 +25,9 @@ export function DraftsView({
 }: DraftsViewProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<GenerationMode>("rewrite");
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (selectedMode: GenerationMode = mode) => {
     setIsGenerating(true);
     setError(null);
 
@@ -37,6 +38,7 @@ export function DraftsView({
         url: spark.url,
         persona: settings.persona,
         language: settings.language,
+        mode: selectedMode,
       });
 
       onUpdateSpark(spark.id, { drafts });
@@ -146,7 +148,7 @@ export function DraftsView({
               </h3>
               <button
                 className="btn btn--ghost"
-                onClick={handleGenerate}
+                onClick={() => handleGenerate()}
                 disabled={isGenerating}
                 style={{ padding: "4px 8px", fontSize: "11px" }}
               >
@@ -171,7 +173,7 @@ export function DraftsView({
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
-              padding: "32px 16px",
+              padding: "24px 16px",
             }}
           >
             <p
@@ -183,9 +185,46 @@ export function DraftsView({
             >
               Ready to transform this into LinkedIn posts?
             </p>
+
+            {/* Mode Toggle */}
+            <div
+              className="nav-tabs"
+              style={{ marginBottom: "16px", width: "100%" }}
+            >
+              <button
+                className={`nav-tab ${
+                  mode === "rewrite" ? "nav-tab--active" : ""
+                }`}
+                onClick={() => setMode("rewrite")}
+              >
+                Human Rewrite
+              </button>
+              <button
+                className={`nav-tab ${
+                  mode === "drafts" ? "nav-tab--active" : ""
+                }`}
+                onClick={() => setMode("drafts")}
+              >
+                4 Draft Types
+              </button>
+            </div>
+
+            <p
+              style={{
+                fontSize: "11px",
+                color: "var(--text-tertiary)",
+                marginBottom: "16px",
+                lineHeight: 1.5,
+              }}
+            >
+              {mode === "drafts"
+                ? "Generate TL;DR, Perspective, Question & Scenario variants"
+                : "Strict rewrite — same meaning, more natural wording"}
+            </p>
+
             <button
               className="btn btn--primary btn--lg"
-              onClick={handleGenerate}
+              onClick={() => handleGenerate()}
               disabled={isGenerating}
             >
               {isGenerating ? (
@@ -193,8 +232,10 @@ export function DraftsView({
                   <div className="spinner" />
                   Generating...
                 </>
-              ) : (
+              ) : mode === "drafts" ? (
                 "Generate Drafts"
+              ) : (
+                "Rewrite Naturally"
               )}
             </button>
           </div>

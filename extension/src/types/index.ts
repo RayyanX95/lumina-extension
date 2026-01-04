@@ -10,9 +10,12 @@ export interface Spark {
   drafts?: Draft[];
 }
 
+// Generation modes for AI
+export type GenerationMode = "drafts" | "rewrite";
+
 export interface Draft {
   id: string;
-  type: "tldr" | "perspective" | "question" | "scenario";
+  type: "tldr" | "perspective" | "question" | "scenario" | "rewrite";
   content: string;
   createdAt: number;
   isEdited: boolean;
@@ -39,4 +42,26 @@ export interface AppState {
   activeSpark: Spark | null;
   isGenerating: boolean;
   settings: Settings;
+}
+
+export interface GenerateDraftsParams {
+  text: string;
+  pageTitle: string;
+  url: string;
+  persona: UserPersona;
+  language?: "en" | "ar";
+  mode?: GenerationMode;
+}
+
+export interface OpenAIMessage {
+  role: "system" | "user" | "assistant";
+  content: string;
+}
+
+export interface OpenAIResponse {
+  choices: Array<{
+    message: {
+      content: string;
+    };
+  }>;
 }
