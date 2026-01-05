@@ -1,4 +1,5 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const cors = require("cors");
 const { OpenAI } = require("openai");
@@ -22,6 +23,8 @@ const limiter = rateLimit({
 
 // Apply rate limiting to all requests
 app.use(limiter);
+
+console.log("OpenAI API Key:", process.env.OPENAI_API_KEY);
 
 // OpenAI Configuration
 const openai = new OpenAI({
