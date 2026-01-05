@@ -24,8 +24,6 @@ const limiter = rateLimit({
 // Apply rate limiting to all requests
 app.use(limiter);
 
-console.log("OpenAI API Key:", process.env.OPENAI_API_KEY);
-
 // OpenAI Configuration
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // Using the same key from frontend env
