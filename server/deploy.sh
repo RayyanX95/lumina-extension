@@ -22,5 +22,8 @@ npm install || { echo "❌ npm install failed"; exit 1; }
 echo "🔄 Reloading Node.js app with PM2..."
 sudo pm2 reload lumina-proxy || { echo "❌ PM2 reload failed"; exit 1; }
 
+echo "============================"
 echo "✅ Deployment finished successfully! 🎉"
+echo "============================"
+
 echo "📝 Check logs with: pm2 logs lumina-proxy"
