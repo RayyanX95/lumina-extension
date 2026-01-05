@@ -68,7 +68,7 @@ Use frustration phrases at most once, only if relevant.
 });
 
 app.get("/", (req, res) => {
-  res.send("Lumina API is running");
+  res.send("Lumina API is running ✨");
 });
 
 app.listen(port, () => {
