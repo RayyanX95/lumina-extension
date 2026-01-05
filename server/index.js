@@ -5,7 +5,7 @@ const { OpenAI } = require("openai");
 const rateLimit = require("express-rate-limit");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 // Middleware
 app.use(cors());
@@ -25,7 +25,7 @@ app.use(limiter);
 
 // OpenAI Configuration
 const openai = new OpenAI({
-  apiKey: process.env.VITE_OPENAI_API_KEY, // Using the same key from frontend env
+  apiKey: process.env.OPENAI_API_KEY, // Using the same key from frontend env
 });
 
 app.post("/api/generate", async (req, res) => {
