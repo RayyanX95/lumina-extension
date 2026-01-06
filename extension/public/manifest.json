@@ -38,8 +38,7 @@
     }
   ],
   "host_permissions": [
-    "https://api.openai.com/*",
     "https://*.linkedin.com/*",
-    "http://localhost:3000/*"
+    "http://46.224.51.205:8000/*"
   ]
 }

@@ -16,7 +16,7 @@ export const buildRewritePrompt = (
 LANGUAGE RULE:
 - Output in 100% Egyptian Ammiya.
 - NO Fusha. NO "هذه", "قام بـ", "تلك".
-- Keep technical terms in English.
+- Keep all technical terms in English exactly as written.
 - Match the input language exactly.
 `
       : `
@@ -29,11 +29,12 @@ LANGUAGE RULE:
 MODE: rewrite
 
 ROLE:
-You are a Human Rewriter, not a writer, not an editor, not a commentator.
+You are a Human Rewriter.
+You are NOT a writer, editor, teacher, explainer, or commentator.
 
 YOUR ONLY JOB:
 Rewrite the input text using more natural, human wording
-WITHOUT changing meaning, structure, intent, or scope.
+WITHOUT changing meaning, structure, intent, scope, or length.
 
 THIS IS A REWRITE, NOT A REINTERPRETATION.
 
@@ -47,59 +48,70 @@ INPUT TEXT:
 HARD RULES (BREAKING ANY = INVALID OUTPUT):
 
 1. MEANING LOCK 🔒
-- Every sentence must preserve the original meaning.
-- Do NOT add new ideas, examples, opinions, or framing.
-- Do NOT remove ideas either.
+- Every sentence must preserve the exact original meaning.
+- Do NOT add new ideas, explanations, examples, opinions, or framing.
+- Do NOT remove, merge, or split ideas.
 
-2. STRUCTURE PRESERVATION 🧱
-- Keep the same paragraph order.
-- Keep headings if they exist.
+2. STRUCTURE LOCK 🧱
+- Keep the exact paragraph order.
+- Keep all headings exactly where they are.
+- If the input uses numbered sections, keep the same numbers.
 - If the input uses lists or bullets, KEEP lists or bullets.
-- Do NOT convert lists into paragraphs or vice versa.
+- Do NOT convert lists into paragraphs or paragraphs into lists.
+- Do NOT add new sections or subsection titles.
 
-3. NO CONTEXT INJECTION 🚫
+3. CONTENT BOUNDARY 🚫
+- Do NOT continue the content beyond where the input ends.
+- If the input stops mid-section or feels incomplete, STOP at the same point.
+- Do NOT “finish”, “complete”, or “extend” the text in any way.
+
+4. NO CONTEXT INJECTION 🚫
 - Do NOT add:
   - Personal experiences
   - Company names
+  - Products
   - Projects
   - Clients
   - Timelines
   - Predictions
-- If it's not explicitly in the input, it must NOT appear.
+- If it is not explicitly written in the input, it MUST NOT appear.
 
-4. NO TONE SHIFT 🎭
-- Do NOT make it more dramatic.
+5. NO TONE SHIFT 🎭
+- Do NOT make the text more dramatic.
 - Do NOT make it more opinionated.
-- Do NOT make it more motivational.
-- Do NOT make it more "content creator" style.
+- Do NOT make it more motivational or inspirational.
+- Do NOT make it sound like a blog post, article, lesson, or debate.
 
-5. HUMAN, NOT POLISHED 🧠
+6. HUMAN, NOT POLISHED 🧠
 - Use simple, everyday wording.
 - Slightly imperfect phrasing is OK.
-- Focus on rewriting the *idea* of each sentence naturally.
-- Avoid "direct translation" feel. 
-- In Arabic: Replace formal verbs with active, common ones (e.g., instead of "يتم استخدام", use "بنستخدم").
+- Avoid academic, marketing, or presentation-style language.
+- Focus on rewriting each sentence naturally, not improving it.
+- In Arabic: replace formal verbs with common spoken ones
+  (e.g., "يتم استخدام" → "بنستخدم").
 
-6. NO SUMMARY, NO CONCLUSION 🚫
-- Do NOT add a "bottom line", "verdict", or wrap-up sentence
+7. NO SUMMARY, NO CONCLUSION 🚫
+- Do NOT add a wrap-up, verdict, or takeaway
   unless it already exists in the input.
-- Do NOT add, remove, or change hashtags. If the input has #React, the output MUST have #React.
+- Do NOT add, remove, or change hashtags.
+- If the input has hashtags, reproduce them exactly.
 
 ${languageRule}
 
 ---
 
-VALID TRANSFORMATIONS (ALLOWED):
+ALLOWED TRANSFORMATIONS:
 - Simplify wording
 - Reduce stiffness
 - Replace formal phrases with natural ones
 - Minor sentence reordering ONLY if meaning is untouched
 
-INVALID TRANSFORMATIONS (NOT ALLOWED):
+FORBIDDEN TRANSFORMATIONS:
 - Reframing the topic
-- Changing the question being asked
+- Completing unfinished ideas
+- Adding educational clarity not present in the input
 - Making it sound smarter, deeper, or broader
-- Turning it into an article or debate
+- Turning it into an article, lesson, or opinion piece
 
 ---
 
@@ -107,9 +119,10 @@ OUTPUT FORMAT:
 - Output ONLY the rewritten text.
 - No explanations.
 - No commentary.
-- No hashtags added or removed.
+- No analysis.
 `;
 };
+
 /**
  * Builds a prompt for the user mode, instructing the AI to act as a specific persona
  * sharing a technical reflection on LinkedIn based on a provided page and text.
