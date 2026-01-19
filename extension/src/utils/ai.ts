@@ -34,7 +34,8 @@ export async function generateDrafts(
   ];
 
   // Call our local proxy server
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://lumina-api.rayyan-hub.com";
   const response = await fetch(`${API_URL}/api/generate`, {
     method: "POST",
     headers: {
