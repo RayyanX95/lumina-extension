@@ -37,6 +37,6 @@
   ],
   "host_permissions": [
     "https://*.linkedin.com/*",
-    "http://46.224.51.205:8000/*"
+    "https://lumina-api.rayyan-hub.com/*"
   ]
 }
