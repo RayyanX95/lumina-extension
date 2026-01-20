@@ -115,6 +115,39 @@ export function SettingsView({ settings, onSave, onBack }: SettingsViewProps) {
         </div>
       </div>
 
+      {/* Privacy Section */}
+      <div
+        className="settings-section"
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+          paddingTop: "16px",
+          marginBottom: "32px",
+        }}
+      >
+        <p
+          style={{
+            fontSize: "11px",
+            color: "rgba(255,255,255,0.4)",
+            marginBottom: "8px",
+          }}
+        >
+          Your privacy is important to us. Lumina handles your data securely.
+        </p>
+        <a
+          href="https://lumina-api.rayyan-hub.com/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: "12px",
+            color: "#6366f1",
+            textDecoration: "none",
+            fontWeight: 500,
+          }}
+        >
+          View Privacy Policy →
+        </a>
+      </div>
+
       {/* API Key removed - handled by proxy server */}
 
       <button className="btn btn--primary btn--full" onClick={handleSave}>
