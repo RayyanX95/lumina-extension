@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lumina",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Turn your digital footprint into authentic LinkedIn posts. Capture insights, generate drafts, post in one click.",
   "permissions": [
     "activeTab",

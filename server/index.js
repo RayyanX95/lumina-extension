@@ -72,6 +72,37 @@ app.get("/", (req, res) => {
   res.send("Lumina API is running ✨");
 });
 
+app.get("/privacy", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Lumina - Privacy Policy</title>
+        <style>
+          body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+          h1 { color: #6366f1; }
+          h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px; }
+        </style>
+      </head>
+      <body>
+        <h1>Privacy Policy for Lumina</h1>
+        <p><strong>Effective Date:</strong> January 20, 2026</p>
+        
+        <h2>1. Data Collection</h2>
+        <p>Lumina collects highlighted text ("Sparks") only when explicitly requested by the user. We store your professional persona settings locally in your browser.</p>
+        
+        <h2>2. Use of Data</h2>
+        <p>Data is used solely to generate LinkedIn drafts via AI. We do not sell, trade, or repurpose your data for marketing or model training.</p>
+        
+        <h2>3. Third Parties</h2>
+        <p>We use OpenAI's API for content generation. Your data is processed securely and is not used by the provider to train their models.</p>
+        
+        <h2>4. Data Retention</h2>
+        <p>Your history is stored locally on your machine. You can delete your data at any time through the extension interface.</p>
+      </body>
+    </html>
+  `);
+});
+
 app.listen(port, () => {
   console.log(`Lumina Proxy Server running at http://localhost:${port}`);
 });
